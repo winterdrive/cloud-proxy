@@ -28,9 +28,9 @@ def fetch(url):
 
 
 @app.post("/fetch-url")
-async def fetch_url(request: URLRequest):
+async def fetch_url(url: str):
     try:
-        content = fetch(request.url)
+        content = fetch(url)
         return {"content": content}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
