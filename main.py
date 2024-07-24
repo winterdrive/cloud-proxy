@@ -7,10 +7,6 @@ from fake_useragent import UserAgent
 app = FastAPI()
 
 
-class URLRequest(BaseModel):
-    url: str
-
-
 def fetch(url):
     cloudscraper_mobile = cloudscraper.create_scraper(
         delay=10,
@@ -27,10 +23,14 @@ def fetch(url):
     return response.content.decode('utf-8')
 
 
+class URLItem(BaseModel):
+    url: str
+
+
 @app.post("/fetch-url")
-async def fetch_url(url: str):
+async def fetch_url(item: URLItem):
     try:
-        content = fetch(url)
+        content = fetch(item.url)
         return {"content": content}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
