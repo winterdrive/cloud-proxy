@@ -7,7 +7,7 @@ from fake_useragent import UserAgent
 app = FastAPI()
 
 
-def fetch(url):
+def fetch(url: str) -> str:
     cloudscraper_mobile = cloudscraper.create_scraper(
         delay=10,
         browser={
@@ -17,10 +17,9 @@ def fetch(url):
             "custom": UserAgent().random,
         },
     )
-
     response = cloudscraper_mobile.get(url, timeout=15)
-
-    return response.content.decode('utf-8')
+    response.raise_for_status()  # This will raise an exception for HTTP errors
+    return response.text
 
 
 class URLItem(BaseModel):
@@ -41,3 +40,7 @@ async def get_ip():
     # https://www.whatismyip.com/
     ip = requests.get('https://api.ipify.org').text
     return {"message": ip}
+
+
+if __name__ == '__main__':
+    print(fetch("https://www.mirrormedia.mg/story/20240703yweb001"))
