@@ -1,3 +1,4 @@
+import requests
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import cloudscraper
@@ -33,3 +34,10 @@ async def fetch_url(request: URLRequest):
         return {"content": content}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/ip")
+async def get_ip():
+    # https://www.whatismyip.com/
+    ip = requests.get('https://api.ipify.org').text
+    return {"message": ip}
