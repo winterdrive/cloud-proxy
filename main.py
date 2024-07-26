@@ -112,7 +112,7 @@ async def fetch_url_content(item: URLItem):
 
 
 @app.post("/fetch-url-playwright")
-async def fetch_url_playwright(item: URLItem):
+def fetch_url_playwright(item: URLItem):
     try:
         content = fetch_content_by_playwright(item.url)
         return content
