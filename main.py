@@ -1,8 +1,11 @@
+import io
+
 import requests
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import cloudscraper
 from fake_useragent import UserAgent
+from starlette.responses import StreamingResponse
 
 app = FastAPI()
 
@@ -52,6 +55,21 @@ def fetch_content_utf8(url: str) -> str:
     return response.content.decode('utf-8')
 
 
+def fetch_content_binary(url: str) -> bytes:
+    cloudscraper_mobile = cloudscraper.create_scraper(
+        delay=10,
+        browser={
+            "browser": "chrome",
+            "mobile": False,
+            "platform": "ios",
+            "custom": UserAgent().random,
+        },
+    )
+    response = cloudscraper_mobile.get(url, timeout=15)
+    response.raise_for_status()  # This will raise an exception for HTTP errors
+    return response.content
+
+
 def fetch_content_by_playwright(url: str) -> str:
     from playwright.sync_api import sync_playwright
     try:
@@ -82,6 +100,15 @@ def fetch_content_by_playwright(url: str) -> str:
 
 class URLItem(BaseModel):
     url: str
+
+
+@app.post("/fetch-url-content-binary")
+async def fetch_url_content_binary(item: URLItem):
+    try:
+        content = fetch_content_binary(item.url)
+        return StreamingResponse(io.BytesIO(content), media_type="text/html")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/fetch-url")
