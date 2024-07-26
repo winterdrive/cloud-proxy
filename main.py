@@ -88,7 +88,7 @@ class URLItem(BaseModel):
 async def fetch_url(item: URLItem):
     try:
         content = fetch(item.url)
-        return {"content": content}
+        return content
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -97,7 +97,7 @@ async def fetch_url(item: URLItem):
 async def fetch_url_content_utf8(item: URLItem):
     try:
         content = fetch_content_utf8(item.url)
-        return {"content": content}
+        return content
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -106,7 +106,7 @@ async def fetch_url_content_utf8(item: URLItem):
 async def fetch_url_content(item: URLItem):
     try:
         content = fetch_content(item.url)
-        return {"content": content}
+        return content
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -115,7 +115,7 @@ async def fetch_url_content(item: URLItem):
 async def fetch_url_playwright(item: URLItem):
     try:
         content = fetch_content_by_playwright(item.url)
-        return {"content": content}
+        return content
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
