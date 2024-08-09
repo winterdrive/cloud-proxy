@@ -70,6 +70,7 @@ async def fetch_url(item: URLItem):
 def fetch_url_playwright(item: URLItem):
     try:
         content = fetch_content_by_playwright(item.url)
+        content = str.encode(content)
         return StreamingResponse(io.BytesIO(content), media_type="text/html")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -82,5 +83,7 @@ async def get_ip():
     return {"message": ip}
 
 
-if __name__ == '__main__':
-    print(fetch("https://www.mirrormedia.mg/story/20240703yweb001"))
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app="main:app", host="0.0.0.0", port=8000)
