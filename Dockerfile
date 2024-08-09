@@ -1,5 +1,5 @@
 # Use the official Python image from the Docker Hub
-FROM python:3.12.3
+FROM mcr.microsoft.com/playwright/python:v1.45.1-jammy
 
 # Set the working directory in the container
 WORKDIR /app
